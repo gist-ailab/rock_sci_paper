@@ -6,7 +6,7 @@ import torch.optim as optim
 import torchvision.transforms as transforms
 import torchvision.models as models
 from torch.utils.data import DataLoader
-import rock_sci_paper.data.dataset as dataset
+import rock_sci_paper.dataset as dataset
 
 # 각종 path 및 파라미터 설정
 data_path = 'C:\\Users\\USER\\Desktop\\GSH_CRP\\dataset\\bench'
