@@ -6,11 +6,12 @@ from glob import glob
 import cv2
 import numpy as np
 
-gesture = 'scissors'
-d_path = f'C:\\Users\\USER\\Desktop\\GSH_CRP\\dataset\\bench\\{gesture}\\*'
-save_path = f'C:\\Users\\USER\\Desktop\\GSH_CRP\\dataset\\bench\\lr_{gesture}\\'
+gesture = 'paper'
+d_path = f'C:\\Users\\USER\\Desktop\\GSH_CRP\\codes\\rock_sci_paper\\data\\ro_sci_pa\\{gesture}\\*'
+save_path = f'C:\\Users\\USER\\Desktop\\GSH_CRP\\codes\\rock_sci_paper\\data\\LR_ro_sci_pa\\{gesture}\\'
 
 img_paths = glob(d_path, recursive=True)
+# print(img_paths)
 for path in img_paths:
     name = path.split('\\')[-1]
     # print(path)

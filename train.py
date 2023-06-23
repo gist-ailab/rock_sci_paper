@@ -6,12 +6,12 @@ import torch.optim as optim
 import torchvision.transforms as transforms
 import torchvision.models as models
 from torch.utils.data import DataLoader
-import rock_sci_paper.dataset as dataset
+import dataset
 
 # 각종 path 및 파라미터 설정
-data_path = 'C:\\Users\\USER\\Desktop\\GSH_CRP\\dataset\\bench'
+data_path = 'C:\\Users\\USER\\Desktop\\GSH_CRP\\codes\\rock_sci_paper\\data\\LR_ro_sci_pa'
 # save_path = '모델 파라미터를 저장할 디렉토리 경로'
-epochs = 50
+epochs = 30
 batch_size = 32
 learning_rate = 0.01
 
@@ -19,59 +19,34 @@ learning_rate = 0.01
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 # transform 설정
-transform = nn.Sequential(
+transform = transforms.Compose([
+    transforms.ToPILImage(),
     transforms.Resize(256),
     transforms.ToTensor(),
-    transforms.Normalize((0.5,0.5,0.5),(0.5,0.5,0.5))
+    transforms.Normalize((0.5,0.5,0.5),(0.5,0.5,0.5))]
 )
 
 # dataset 설정
-train_data = dataset.RockScissorPaper(
-    root=data_path,
-    train=True,
-    download=True,
-    transform=transform
+datasets = dataset.RockScissorsPaper(
+    transform=transform,
+    path = data_path
 )
-test_data = dataset.RockScissorPaper(
-    root=data_path,
-    train=False,
-    download=True,
-    transform=transform
-)
+num_data = len(datasets)
+num_train = int(num_data*0.7)
+num_test = num_data - num_train
+
+train_data, test_data = torch.utils.data.random_split(datasets, [num_train, num_test])
 
 # dataloader 설정
-trainloader = DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=2)
-testloader = DataLoader(test_data, batch_size=batch_size, shuffle=False, num_workers=2)
-
-# model 설계
-class ConvNet(nn.Module):
-    def __init__(self, num_classes=10):
-        super(ConvNet, self).__init__()
-        self.layer1 = nn.Sequential(
-            nn.Conv2d(in_channels=3, out_channels=16, kernel_size=5, stride=1, padding=2),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2))
-
-        self.layer2 = nn.Sequential(
-            nn.Conv2d(in_channels=16, out_channels=32, kernel_size=5, stride=1, padding=2),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2))
-
-        self.fc = nn.Linear(8*8*32, num_classes)
-
-    def forward(self, x):
-        out = self.layer1(x)
-        out = self.layer2(out)
-        flatten = out.view(out.size(0), -1)
-        score = self.fc(flatten)
-        return score
+trainloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
+testloader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
 
 # 모델, 손실함수, 옵티마이저 설정
-# model = ConvNet()
-model = models.resnet18(rpetrained=True)
+model = models.resnet18(pretrained=True)
+model.fc = nn.Linear(512, 3)
 model = model.to(device)
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters, lr=learning_rate)
+optimizer = optim.SGD(model.parameters(), lr=learning_rate)
 
 def train(epoch):
     print('\nEpoch: %d'%epoch)
