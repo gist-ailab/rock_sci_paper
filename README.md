@@ -3,11 +3,11 @@
 **Train Classifier for Rock Scissor Paper Hand gesture using deep learning**<br />
 
 ## Code Overview
-**data_generation.py** : Generating rock-scissor-paper hand gesture image dataset by taking a photo of gesture in order to corresponding label<br />
-**dataset.py** : Loader of rock-scissor-paper dataset<br />
-**delete.py** : Remove all datas in the folder<br />
-**lowResolutionGen.py** : Generating low resolution images of dataset in given path<br />
-**train.py** : Basic Train codes for rock-scissor-paper dataset<br />
+1. **data_generation.py** : Generating rock-scissor-paper hand gesture image dataset by taking a photo of gesture in order to corresponding label<br />
+2. **dataset.py** : Loader of rock-scissor-paper dataset<br />
+3. **delete.py** : Remove all datas in the folder<br />
+4. **lowResolutionGen.py** : Generating low resolution images of dataset in given path<br />
+5. **train.py** : Basic Train codes for rock-scissor-paper dataset<br />
 
 ## ToDo
 1. **teacher_train.py** : Train teacher model
