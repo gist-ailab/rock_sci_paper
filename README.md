@@ -7,10 +7,9 @@
 2. **dataset.py** : Loader of rock-scissor-paper dataset<br />
 3. **delete.py** : Remove all datas in the folder<br />
 4. **lowResolutionGen.py** : Generating low resolution images of dataset in given path<br />
-~~5. **train.py** : Basic Train codes for rock-scissor-paper dataset~~<br />
-6. **teacher_train.py** : Train teacher model<br />
-7. **student_train.py** : Train student model by distilating feature of teacher model<br />
-8. **model.py** : Resnet model but user can access to output feature of each blocks<br />
+5. **teacher_train.py** : Train teacher model<br />
+6. **student_train.py** : Train student model by distilating feature of teacher model<br />
+7. **model.py** : Resnet model but user can access to output feature of each blocks<br />
 
 ## ToDo
 ~~1. **teacher_train.py** : Train teacher model~~
