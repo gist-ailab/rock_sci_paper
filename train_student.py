@@ -58,7 +58,8 @@ optimizer = optim.SGD(student_model.parameters(), lr=learning_rate)
 
 def train(epoch):
     print('\nEpoch: %d'%epoch)
-    # model train mode로 전환
+    # student model train mode로 전환
+    # teacher model은 eval mode
     teacher_model.eval()
     student_model.train()
     running_loss = 0.0
@@ -81,10 +82,7 @@ def train(epoch):
         
         distil_loss = distil_loss4 + distil_loss3 + distil_loss2 + distil_loss1
         loss = classif_loss + 0.2*distil_loss
-        
-        # print(distil_loss)
-        # print(classif_loss)
-        
+
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
@@ -118,9 +116,6 @@ def test(epoch, loader, mode='val'):
         
         distil_loss = distil_loss4 + distil_loss3 + distil_loss2 + distil_loss1
         loss = classif_loss + 0.2*distil_loss
-        
-        # print(distil_loss)
-        # print(classif_loss)
 
         running_loss += loss.item()
     total_loss = running_loss / len(loader)

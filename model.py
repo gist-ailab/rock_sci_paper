@@ -104,6 +104,7 @@ class ResNet(nn.Module):
             out6 = out5.view(out5.size(0), -1)
             out7 = self.linear(out6)
             
+            # 피쳐 flatten
             out4 = out4.reshape(out4.shape[0], out4.shape[1], -1)
             out3 = out3.reshape(out3.shape[0], out3.shape[1], -1)
             out2 = out2.reshape(out2.shape[0], out2.shape[1], -1)
