@@ -12,9 +12,9 @@
 7. **model.py** : Resnet model but user can access to output feature of each blocks<br />
 
 ## ToDo
-~~1. **teacher_train.py** : Train teacher model~~
-~~2. **student_train.py** : Train student model by distilating feature of teacher model~~
-~~3. **model.py** : Resnet model but user can access to output feature of each blocks~~
-4. **competiton.py** : Evaluation codes that classify given hand gesture and return gesture that can win
-5. **Class_Lecture.ppt** : Presentation for lecture class about basic deep learning and classification and knowledge distilation
-6. **Lab_introduction.ppt** : Presentation for introducing AI lab
+~~1. **teacher_train.py** : Train teacher model~~<br />
+~~2. **student_train.py** : Train student model by distilating feature of teacher model~~<br />
+~~3. **model.py** : Resnet model but user can access to output feature of each blocks~~<br />
+4. **competiton.py** : Evaluation codes that classify given hand gesture and return gesture that can win<br />
+5. **Class_Lecture.ppt** : Presentation for lecture class about basic deep learning and classification and knowledge distilation<br />
+6. **Lab_introduction.ppt** : Presentation for introducing AI lab<br />
