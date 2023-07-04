@@ -8,13 +8,20 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 import dataset
 import model
+import torch.nn.functional as F
 
 # 각종 path 및 파라미터 설정
 data_path = 'C:\\Users\\USER\\Desktop\\GSH_CRP\\codes\\rock_sci_paper\\data\\ro_sci_pa'
 save_path = 'C:\\Users\\USER\\Desktop\\GSH_CRP\\codes\\rock_sci_paper\\model_para'
-epochs = 30
-batch_size = 32
+epochs = 50
+batch_size = 16
 learning_rate = 0.01
+seed = 2023
+
+torch.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
+
+mode = 'lr'
 
 # gpu를 사용할 수 있으면 gpu를 사용
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -33,7 +40,7 @@ datasets = dataset.RockScissorsPaper(
     path = data_path
 )
 num_data = len(datasets)
-num_train = int(num_data*0.7)
+num_train = int(num_data*0.6)
 num_val = int(num_data*0.2)
 num_test = num_data - num_train - num_val
 
@@ -60,7 +67,15 @@ def train(epoch):
     for (inputs, labels) in trainloader:
         inputs, labels = inputs.to(device), labels.to(device)
         optimizer.zero_grad()
-        outputs, _, _, _, _ = model(inputs)
+        
+        if mode=='lr':
+            h,w = inputs.shape[-2], inputs.shape[-1]
+            lr_inputs = F.interpolate(inputs, (h//64, w//64))
+            lr_inputs = F.interpolate(lr_inputs, (h,w))
+            outputs, _, _, _, _ = model(lr_inputs)
+        else:
+            outputs, _, _, _, _ = model(inputs)
+            
         _, pred = torch.max(outputs, 1)
         total += outputs.size(0)
         running_acc += (pred == labels).sum().item()
@@ -83,7 +98,15 @@ def test(epoch, loader, mode='val'):
     with torch.no_grad():
         for (inputs, labels) in loader:
             inputs, labels = inputs.to(device), labels.to(device)
-            outputs, _, _, _, _ = model(inputs)
+            
+            if mode=='lr':
+                h,w = inputs.shape[-2], inputs.shape[-1]
+                lr_inputs = F.interpolate(inputs, (h//32, w//32))
+                lr_inputs = F.interpolate(lr_inputs, (h,w))
+                outputs, _, _, _, _ = model(lr_inputs)
+            else:
+                outputs, _, _, _, _ = model(inputs)
+
             _, pred = torch.max(outputs, 1)
             total += outputs.size(0)
             running_acc += (pred == labels).sum().item()

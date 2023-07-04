@@ -8,13 +8,18 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 import dataset
 import model
+import torch.nn.functional as F
 
 # 각종 path 및 파라미터 설정
 data_path = 'C:\\Users\\USER\\Desktop\\GSH_CRP\\codes\\rock_sci_paper\\data\\ro_sci_pa'
 save_path = 'C:\\Users\\USER\\Desktop\\GSH_CRP\\codes\\rock_sci_paper\\model_para'
-epochs = 30
-batch_size = 32
+epochs = 50
+batch_size = 16
 learning_rate = 0.01
+seed = 2023
+
+torch.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
 
 # gpu를 사용할 수 있으면 gpu를 사용
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -22,7 +27,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 # transform 설정
 transform = transforms.Compose([
     transforms.ToPILImage(),
-    transforms.Resize((32,32)),
+    transforms.Resize((256,256)),
     transforms.ToTensor(),
     transforms.Normalize((0.5,0.5,0.5),(0.5,0.5,0.5))]
 )
@@ -32,8 +37,9 @@ datasets = dataset.RockScissorsPaper(
     transform=transform,
     path = data_path
 )
+
 num_data = len(datasets)
-num_train = int(num_data*0.7)
+num_train = int(num_data*0.6)
 num_val = int(num_data*0.2)
 num_test = num_data - num_train - num_val
 
@@ -43,6 +49,8 @@ train_data, val_data, test_data = torch.utils.data.random_split(datasets, [num_t
 trainloader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 valloader = DataLoader(val_data, batch_size=batch_size, shuffle=False)
 testloader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
+
+
 
 # 모델, 손실함수, 옵티마이저 설정
 teacher_model = model.ResNet18(num_classes=3)
@@ -69,7 +77,12 @@ def train(epoch):
         inputs, labels = inputs.to(device), labels.to(device)
         optimizer.zero_grad()
         _, t4, t3, t2, t1 = teacher_model(inputs)
-        outputs, s4, s3, s2, s1 = student_model(inputs)
+        
+        h,w = inputs.shape[-2], inputs.shape[-1]
+        lr_inputs = F.interpolate(inputs, (h//64, w//64))
+        lr_inputs = F.interpolate(lr_inputs, (h,w))
+        
+        outputs, s4, s3, s2, s1 = student_model(lr_inputs)
         _, pred = torch.max(outputs, 1)
         total += outputs.size(0)
         running_acc += (pred == labels).sum().item()
@@ -102,20 +115,24 @@ def test(epoch, loader, mode='val'):
     for (inputs, labels) in loader:
         inputs, labels = inputs.to(device), labels.to(device)
 
-        _, t4, t3, t2, t1 = teacher_model(inputs)
-        outputs, s4, s3, s2, s1 = student_model(inputs)
+        # _, t4, t3, t2, t1 = teacher_model(inputs)
+        h,w = inputs.shape[-2], inputs.shape[-1]
+        lr_inputs = F.interpolate(inputs, (h//64, w//64))
+        lr_inputs = F.interpolate(lr_inputs, (h,w))
+        
+        outputs, s4, s3, s2, s1 = student_model(lr_inputs)
         _, pred = torch.max(outputs, 1)
         total += outputs.size(0)
         running_acc += (pred == labels).sum().item()
         
         classif_loss = criterion(outputs, labels)
-        distil_loss4 = torch.mean(dist_criterion(t4, s4))
-        distil_loss3 = torch.mean(dist_criterion(t3, s3))
-        distil_loss2 = torch.mean(dist_criterion(t2, s2))
-        distil_loss1 = torch.mean(dist_criterion(t1, s1))
+        # distil_loss4 = torch.mean(dist_criterion(t4, s4))
+        # distil_loss3 = torch.mean(dist_criterion(t3, s3))
+        # distil_loss2 = torch.mean(dist_criterion(t2, s2))
+        # distil_loss1 = torch.mean(dist_criterion(t1, s1))
         
-        distil_loss = distil_loss4 + distil_loss3 + distil_loss2 + distil_loss1
-        loss = classif_loss + 0.2*distil_loss
+        # distil_loss = distil_loss4 + distil_loss3 + distil_loss2 + distil_loss1
+        loss = classif_loss
 
         running_loss += loss.item()
     total_loss = running_loss / len(loader)
@@ -124,13 +141,14 @@ def test(epoch, loader, mode='val'):
         path = os.path.join(save_path, f'student.pth')
         torch.save(student_model.state_dict(), path)
         BEST_SCORE = total_acc
-    print(f'Train epoch : {epoch} loss : {total_loss} Acc : {total_acc}%')
+    print(f'Test epoch : {epoch} loss : {total_loss} Acc : {total_acc}%')
 
 # 모델 학습 및 평가
 BEST_SCORE = 0
 for epoch in range(epochs):
     train(epoch)
     test(epoch, valloader)
+    print(BEST_SCORE)
 
 print("TEST-----------------------------------")
 student_model.load_state_dict(torch.load(os.path.join(save_path, f'student.pth')))
