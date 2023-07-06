@@ -1,60 +1,56 @@
 import torch
 import torch.nn as nn
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-from IPython import display
-
-
+import sys
+from visualize import *
 from generate_array import get_grid
 from vis_dataset import VIS_DATASET
 from model import FCN_only2
 
 init_data_array = get_grid()
-# print(init_data_array)
-# exit()
+
 train_dataset = VIS_DATASET(init_data_array)
 
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=1, shuffle=True)
 
 model = FCN_only2(6)
-print(model)
 
 
-
-learning_rate = 1e-4
+learning_rate = 1e-3
 loss_function = nn.MSELoss(reduction="sum")
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-epoch = 10000
+epoch = 1000
 model.train()
 
-            
-for t in range(epoch+1):
-    # f, axes = plt.subplots(1,2)
-    # axes[0].set_facecolor('black')
-    # axes[1].set_facecolor('black')
-    # f.set_size_inches((50,50))
-        
+
+def train():
+    out_list = []
+    lat_list = []
+    lab_list = []
+    total_loss = 0
     for i, (inputs, labels) in enumerate(train_loader):
         output, latent = model(inputs)
-        latent = latent.detach().numpy()
-        
-        # if labels.item() == 0:
-        #     axes[0].scatter(x = latent[0][0], y = latent[0][1], color='red', s= 100)
-        #     axes[1].scatter(output.detach().numpy(), y = 0, color = 'red', s=100)
-        # elif labels.item() == 1:
-        #     axes[0].scatter(x =latent[0][0], y = latent[0][1], color='yellow', s=100)
-        #     axes[1].scatter(output.detach().numpy(), y = 0, color = 'yellow', s=100)
-        
-    
-        # exit()
-        
         loss = loss_function(output, labels)
         optimizer.zero_grad()
         loss.backward()
-        print(loss)
+        # print(loss)
+        total_loss += loss
+        
         optimizer.step()
-    # f.savefig('s'+str(t)+'.png')
-    # f.clf()
-    # exit()
-    # plt.show()
+        out_list.append(output.detach().numpy())
+        lat_list.append(latent.detach().numpy())
+        lab_list.append(labels.detach().numpy())
+    print(t, total_loss)
+    return out_list, lat_list, lab_list, loss
+
+qApp = QApplication(sys.argv)
+
+for t in range(epoch+1):
+    out,lat,lab, loss = train()
+    if t ==0 :
+        aw = AnimationWidget(out, lat, lab, t, loss)
+    else:
+        aw.update_var(out,lat,lab, t, loss)
+    
+aw.show()
+sys.exit(qApp.exec_())
