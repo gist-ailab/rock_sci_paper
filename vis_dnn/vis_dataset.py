@@ -4,7 +4,6 @@ import torch
 
 class VIS_DATASET(Dataset):
     def __init__(self, a):
-        # print(a)
         a = np.array(a)
         coor = []
         for k in range(1,3):
