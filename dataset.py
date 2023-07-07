@@ -10,8 +10,8 @@ class RockScissorsPaper(Dataset):
     def __init__(self, transform=None, path='./DATA'):
         self.class_num = 3
         self.transform = transform
-        self.img_path = glob.glob(os.path.join(path,'paper/*'))+glob.glob(os.path.join(path,'rock/*'))+glob.glob(os.path.join(path,'scissor/*'))
-        self.label_dict = {'rock':0, 'scissor':1, 'paper':2}
+        self.img_path = glob.glob(os.path.join(path,'paper/*'))+glob.glob(os.path.join(path,'rock/*'))+glob.glob(os.path.join(path,'scissors/*'))
+        self.label_dict = {'rock':0, 'scissors':1, 'paper':2}
 
     def __len__(self):
         return len(self.img_path)
