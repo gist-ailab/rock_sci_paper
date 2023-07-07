@@ -58,9 +58,13 @@ def get_grid():
     ROW_COUNT = SCREEN_HEIGHT // CELL_SIZE
 
     grid = [[0 for _ in range(COLUMN_COUNT)] for _ in range(ROW_COUNT)]
+    
+    
 
     clock = pygame.time.Clock() 
     runGame(clock, screen, grid, COLUMN_COUNT, ROW_COUNT, CELL_SIZE)
+    
     pygame.quit() 
+    grid = grid[::-1]
     
     return grid

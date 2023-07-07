@@ -18,7 +18,8 @@ train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=1, shuffle=
 
 ### define model and hyperparameter can change model layer 
 
-model = FCN_only2(7)
+num_layer = 1
+model = FCN_only2(num_layer)
 
 learning_rate = 1e-2
 loss_function = nn.MSELoss(reduction="sum")
@@ -35,7 +36,7 @@ t = 0
 loss = 0
 
 qApp = QApplication(sys.argv)
-aw = VisualizeAllLayer(out, lat, lab, t, loss)
+aw = VisualizeAllLayer(lat, lab, num_layer)
 
 ### train and visualize
 

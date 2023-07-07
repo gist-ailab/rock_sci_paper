@@ -4,14 +4,16 @@ import matplotlib.pyplot as plt
 
 
 class MyMplCanvas(FigureCanvas):
-    def __init__(self, parent=None):
-        f, axes = plt.subplots(1,2)
+    def __init__(self, num, parent=None):
+        print(num)
+        f, axes = plt.subplots(1,num+2)
         self.axes = axes
         self.f = f
-        
-        axes[0].set_facecolor('black')
-        axes[1].set_facecolor('black')
-        f.set_size_inches((50,100))
+        for i in range(num+2):
+            axes[i].set_facecolor('black')
+            print(i)
+            
+        f.set_size_inches((50,50*(num+2)))
         
         self.compute_initial_figure()
         FigureCanvas.__init__(self, f)
@@ -24,7 +26,7 @@ class ExperimentWidget(QWidget):
         QMainWindow.__init__(self)
         
         vbox = QVBoxLayout()
-        self.canvas = MyMplCanvas(self)
+        self.canvas = MyMplCanvas()
         vbox.addWidget(self.canvas)
         
         self.setLayout(vbox)
@@ -32,10 +34,10 @@ class ExperimentWidget(QWidget):
         for i in range(len(latent)):
             if label[i].item()==0:
                 self.line = self.canvas.axes[0].scatter(x = latent[i][0][0], y = latent[i][0][1], color='red', s= 100)
-                self.line2 = self.canvas.axes[1].scatter(output[i], y = 0, color = 'red', s=100)
+                # self.line2 = self.canvas.axes[1].scatter(output[i], y = 0, color = 'red', s=100)
             elif label[i].item()==1:
                 self.line = self.canvas.axes[0].scatter(x = latent[i][0][0], y = latent[i][0][1], color='yellow', s= 100)
-                self.line2 = self.canvas.axes[1].scatter(output[i], y = 0, color = 'yellow', s=100)
+                # self.line2 = self.canvas.axes[1].scatter(output[i], y = 0, color = 'yellow', s=100)
         
     def update_var(self, output, latent, label, epoch, loss):
         self.canvas.axes[0].cla()
@@ -53,20 +55,20 @@ class ExperimentWidget(QWidget):
 
 
 class VisualizeAllLayer(QWidget):
-    def __init__(self, output, latent,label, epoch, loss):
+    def __init__(self, latent,label, num_layer):
         QMainWindow.__init__(self)
-        
-        
+        self.num_layer = num_layer
         vbox = QVBoxLayout()
-        self.canvas = MyMplCanvas(self)
+        print(num_layer)
+        self.canvas = MyMplCanvas(num = num_layer)
         vbox.addWidget(self.canvas)
         
         self.setLayout(vbox)
         for i in range(len(label)):
-            if label[i].item()==0:
-                self.line2 = self.canvas.axes[1].scatter(output[i], y = 0, color = 'red', s=100)
-            elif label[i].item()==1:
-                self.line2 = self.canvas.axes[1].scatter(output[i], y = 0, color = 'yellow', s=100)
+            # if label[i].item()==0:
+            #     self.line2 = self.canvas.axes[1].scatter(output[i], y = 0, color = 'red', s=100)
+            # elif label[i].item()==1:
+            #     self.line2 = self.canvas.axes[1].scatter(output[i], y = 0, color = 'yellow', s=100)
             for j in range(len(latent[0])):
                 if label[i].item()==0:
                     self.line = self.canvas.axes[0].scatter(x = latent[i][j][0][0], y = latent[i][j][0][1], color='red', s= 100)
