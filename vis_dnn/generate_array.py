@@ -1,6 +1,4 @@
 import pygame 
-import random
-
 
 def in_bound(column_index, row_index, COLUMN_COUNT, ROW_COUNT):
     if (0 <= column_index < COLUMN_COUNT and 0 <= row_index < ROW_COUNT):
