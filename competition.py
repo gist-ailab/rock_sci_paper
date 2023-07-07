@@ -35,7 +35,6 @@ while webcam.isOpened():
         break
 
 img = cv2.imread(os.path.join(save_path, 'inference.jpg'))
-# img = cv2.imread('/home/ailab/Workspace/minhwan/rock_sci_paper/data/ro_sci_pa_heo/rock/13.jpg')
 
 img = transform(img)
 img = img.unsqueeze(0).cuda()
