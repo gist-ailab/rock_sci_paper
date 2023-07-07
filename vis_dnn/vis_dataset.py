@@ -9,7 +9,7 @@ class VIS_DATASET(Dataset):
         for k in range(1,3):
             init_coor = np.where(a==k)
             for i in range(len(init_coor[0])):
-                coor.append([[init_coor[0][i]/(len(a)), init_coor[1][i]/(len(a))],k-1])
+                coor.append([[init_coor[1][i]/(len(a)-1), init_coor[0][i]/(len(a)-1)],k-1])
 
         self.coor = coor
     
@@ -19,5 +19,20 @@ class VIS_DATASET(Dataset):
     def __getitem__(self,idx):
         data = torch.tensor(self.coor[idx][0]).float()
         label = torch.tensor([self.coor[idx][1]]).float()
-        
+        print(data)
         return data, label
+    
+class DOT_DATASET(Dataset):
+    def __init__(self, num):
+        a = torch.tensor([[[i/(num-1),j/(num-1)] for i in range(num)] for j in range(num)])
+        print(a)
+        self.a = a
+        self.num = num
+    
+    def __len__(self):
+        return len(self.a) * len(self.a[0])
+        
+    def __getitem__(self,idx):
+        data = self.a[int(idx/self.num)][int(idx%self.num)]
+        return data
+    
