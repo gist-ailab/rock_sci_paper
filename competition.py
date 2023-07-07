@@ -6,7 +6,8 @@ import model
 import os
 import time
 
-save_path = 'C:\\Users\\USER\\Desktop\\GSH_CRP\\codes\\rock_sci_paper\\model_para'
+save_path = '/home/ailab/Workspace/minhwan/rock_sci_paper/model_para'
+# save_path = 'C:\\Users\\USER\\Desktop\\GSH_CRP\\codes\\rock_sci_paper\\model_para'
 
 cap  = cv2.VideoCapture(0)
 
