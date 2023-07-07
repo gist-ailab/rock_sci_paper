@@ -7,8 +7,8 @@ import numpy as np
 import random
 
 seed = 2023
-tr_rate = 0.6
-va_rate = 0.2
+tr_rate = 0.8
+va_rate = 0.1
 te_rate = 1-tr_rate-va_rate
 
 
