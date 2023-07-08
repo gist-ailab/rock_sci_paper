@@ -9,6 +9,7 @@ class MyMplCanvas(FigureCanvas):
         f, axes = plt.subplots(1,num+2)
         self.axes = axes
         self.f = f
+        
         for i in range(num+2):
             axes[i].set_facecolor('black')
             print(i)
@@ -65,10 +66,7 @@ class VisualizeAllLayer(QWidget):
         
         self.setLayout(vbox)
         for i in range(len(label)):
-            # if label[i].item()==0:
-            #     self.line2 = self.canvas.axes[1].scatter(output[i], y = 0, color = 'red', s=100)
-            # elif label[i].item()==1:
-            #     self.line2 = self.canvas.axes[1].scatter(output[i], y = 0, color = 'yellow', s=100)
+            
             for j in range(len(latent[0])):
                 if label[i].item()==0:
                     self.line = self.canvas.axes[0].scatter(x = latent[i][j][0][0], y = latent[i][j][0][1], color='red', s= 100)
@@ -76,23 +74,42 @@ class VisualizeAllLayer(QWidget):
                     self.line = self.canvas.axes[0].scatter(x = latent[i][j][0][0], y = latent[i][j][0][1], color='yellow', s= 100)
         plt.pause(3)
 
-    def update_var(self, output, latent, label, epoch, loss):
-        self.canvas.axes[0].cla()
-        self.canvas.axes[1].cla()
-
+    def update_var(self, output, latent, dot_output, dot_feature, label, epoch, loss, threshold):
+        print("THRESH!",threshold)
+        for i in range(self.num_layer+2):
+            self.canvas.axes[i].cla()
+        
         for j in range(len(latent[0])):
-            for i in range(len(label)):
-                if label[i].item()==0:
-                    self.line = self.canvas.axes[0].scatter(x = latent[i][j][0][0], y = latent[i][j][0][1], color='red', s= 100)
-                elif label[i].item()==1:
-                    self.line = self.canvas.axes[0].scatter(x = latent[i][j][0][0], y = latent[i][j][0][1], color='yellow', s= 100)
-                self.canvas.axes[0].set_title(f"Layer : {j}", fontsize = 20)
-                if j == 0:
-                    self.canvas.axes[1].set_title(f"Epoch: {epoch} Loss : {loss}", fontsize = 20)
+            for i in range(len(latent)):
+                if j == len(latent[0])-1:
+                    self.canvas.axes[j].set_title(f"Epoch: {epoch} Loss : {loss}", fontsize = 20)
                     if label[i].item()==0:
-                        self.line2 = self.canvas.axes[1].scatter(output[i], y = 0, color = 'red', s=100)
+                        self.canvas.axes[j].scatter(latent[i][j][0][0], y = 0, color = 'red', s=100)
                     elif label[i].item()==1:
-                        self.line2 = self.canvas.axes[1].scatter(output[i], y = 0, color = 'yellow', s=100)
-            plt.pause(1)
-            self.canvas.axes[0].cla()
+                        self.canvas.axes[j].scatter(latent[i][j][0][0], y = 0, color = 'yellow', s=100)
+                else:
+                    if label[i].item()==0:
+                        self.canvas.axes[j].scatter(x = latent[i][j][0][0], y = latent[i][j][0][1], color='red', s= 100)
+                    elif label[i].item()==1:
+                        self.canvas.axes[j].scatter(x = latent[i][j][0][0], y = latent[i][j][0][1], color='yellow', s= 100)
+                    self.canvas.axes[j].set_title(f"Layer : {j}", fontsize = 20)
+                
+            
+            for i in range(len(dot_feature)):
+                if j == len(dot_feature[0])-1:
+                    self.canvas.axes[j].set_title(f"Epoch: {epoch} Loss : {loss}", fontsize = 20)
+                    if dot_output[i]<threshold:
+                        self.canvas.axes[j].scatter(dot_feature[i][j][0][0], y = 0, color = 'red', alpha=0.3, s=10)
+                    elif dot_output[i]>threshold:
+                        self.canvas.axes[j].scatter(dot_feature[i][j][0][0], y = 0, color = 'yellow', alpha=0.3, s=10)
+                else:
+                    if dot_output[i]<threshold:
+                        self.canvas.axes[j].scatter(x = dot_feature[i][j][0][0], y = dot_feature[i][j][0][1], color='red', alpha=0.3, s= 100)
+                    elif dot_output[i]>threshold:
+                        self.canvas.axes[j].scatter(x = dot_feature[i][j][0][0], y = dot_feature[i][j][0][1], color='yellow', alpha=0.3, s= 100)
+                    self.canvas.axes[j].set_title(f"Layer : {j}", fontsize = 20)
+                    
+                        
+            # plt.pause(1)
+            # self.canvas.axes[0].cla()
         plt.pause(0.001)

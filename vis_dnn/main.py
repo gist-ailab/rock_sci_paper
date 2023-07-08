@@ -37,6 +37,7 @@ model.train()
 
 for t in range(epoch+1):
     output, feature, label, loss = exp_train(train_loader, model, loss_function, optimizer, scheduler)
+    
     if t ==0 :
         aw = ExperimentWidget(output, feature, label, t, loss)
     else:
