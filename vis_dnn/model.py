@@ -17,12 +17,15 @@ class FCN_only2(nn.Module):
         self.act = nn.LeakyReLU(-1.0)
         
     def forward(self, x):
+        self.reset()
+        self.feature.append(x.detach().numpy())
         for i in range(self.num_layer):
             x = self.layer_list[i](x)
             x = self.act(x)
             np_x = x.detach().numpy()
             self.feature.append(np_x)
         x = self.last_layer(x)
+        self.feature.append(x.detach().numpy())
         return x, self.feature
 
     def reset(self):
@@ -46,9 +49,16 @@ class FCN_exp2(nn.Module):
         self.last_layer = nn.Linear(2,1)                   
         self.act = nn.LeakyReLU(-1.0)
     
-    def forward(self, x): 
+    def forward(self, x):
+        self.reset()
+        self.feature.append(x.detach().numpy()) 
         x = self.layer_list(x) 
         latent = self.visual_layer(x) 
         latent = self.act(latent)
-        output = self.last_layer(latent) 
-        return output, latent
+        self.feature.append(latent.detach().numpy())
+        output = self.last_layer(latent)
+        self.feature.append(output.detach().numpy()) 
+        return output, self.feature
+    
+    def reset(self):
+        self.feature = []
