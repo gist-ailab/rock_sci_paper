@@ -41,7 +41,7 @@ aw = VisualizeAllLayer(lat, lab, num_layer)
 
 ### train and visualize
 for t in range(epoch+1):
-    loss = train(train_loader, model, loss_function, optimizer, scheduler, t)
+    loss = train(train_loader, model, loss_function, optimizer, scheduler)
     threshold = get_threshold(train_loader, model)
     dot_output, dot_feature, train_out, train_feature, train_label = test(all_loader, train_loader, model)
     aw.update_var(train_feature, dot_feature, train_label, t, loss, threshold)
