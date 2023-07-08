@@ -25,14 +25,14 @@ all_loader = torch.utils.data.DataLoader(all_dot, batch_size = 1, shuffle= False
 ### define model and hyperparameter can change model layer 
 
 num_layer = 5
-act_function = "ReLU"
-#act_function = "LeakyReLU"
+# act_function = "ReLU"
+act_function = "LeakyReLU"
 model = FCN_exp2(num_layer, act_function)
 
 learning_rate = 1e-4
 loss_function = nn.MSELoss(reduction="sum")
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[300], gamma=0.5)
+scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[300], gamma=1)
 
 epoch = 1000
 

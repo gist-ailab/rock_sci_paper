@@ -9,7 +9,7 @@ class VIS_DATASET(Dataset):
         for k in range(1,3):
             init_coor = np.where(a==k)
             for i in range(len(init_coor[0])):
-                coor.append([[init_coor[1][i]/(len(a)-1), init_coor[0][i]/(len(a)-1)],k-1])
+                coor.append([[init_coor[1][i]/(len(a)), init_coor[0][i]/(len(a))],k-1])
 
         self.coor = coor
     
@@ -23,7 +23,7 @@ class VIS_DATASET(Dataset):
     
 class DOT_DATASET(Dataset):
     def __init__(self, num):
-        a = torch.tensor([[[i/(num-1),j/(num-1)] for i in range(num)] for j in range(num)])
+        a = torch.tensor([[[i/(num),j/(num)] for i in range(num)] for j in range(num)])
         self.a = a
         self.num = num
     
