@@ -19,13 +19,11 @@ class VIS_DATASET(Dataset):
     def __getitem__(self,idx):
         data = torch.tensor(self.coor[idx][0]).float()
         label = torch.tensor([self.coor[idx][1]]).float()
-        print(data)
         return data, label
     
 class DOT_DATASET(Dataset):
     def __init__(self, num):
         a = torch.tensor([[[i/(num-1),j/(num-1)] for i in range(num)] for j in range(num)])
-        print(a)
         self.a = a
         self.num = num
     
