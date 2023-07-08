@@ -6,6 +6,8 @@ from generate_array import get_grid
 from vis_dataset import *
 from model import FCN_only2
 from get_train import *
+import os
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 ### get mouse input with pygame 
 
@@ -23,7 +25,9 @@ all_loader = torch.utils.data.DataLoader(all_dot, batch_size = 1, shuffle= False
 ### define model and hyperparameter can change model layer 
 
 num_layer = 1
-model = FCN_only2(num_layer)
+act_function = "ReLU"
+#act_function = "LeakyReLU"
+model = FCN_only2(num_layer, act_function)
 
 learning_rate = 1e-1
 loss_function = nn.MSELoss(reduction="sum")

@@ -5,7 +5,7 @@ import math
 ### model that only with channel 2 hiddenlayer that all of layer can be visualize
 
 class FCN_only2(nn.Module):
-    def __init__(self, num_layer) -> None:
+    def __init__(self, num_layer, act_func) -> None:
         super().__init__()
         self.num_layer = num_layer
         self.feature = []
@@ -13,8 +13,10 @@ class FCN_only2(nn.Module):
         self.last_layer = nn.Linear(2,1)
         
         ### choose activation function
-        # self.act = nn.ReLU()
-        self.act = nn.LeakyReLU(-1.0)
+        if act_func == "ReLU":
+            self.act = nn.ReLU()
+        elif act_func == "LeakyReLU":
+            self.act = nn.LeakyReLU(-1.0)
         
     def forward(self, x):
         self.reset()
@@ -34,7 +36,7 @@ class FCN_only2(nn.Module):
 ### model with larger channel that can train well only visualize last and pernultimate layer
 
 class FCN_exp2(nn.Module):
-    def __init__(self, num_layer) -> None: 
+    def __init__(self, num_layer, act_func) -> None: 
         super().__init__() 
         self.num_layer = num_layer          
         self.layer_list = nn.Sequential() 
@@ -42,8 +44,10 @@ class FCN_exp2(nn.Module):
             self.layer_list.add_module("layer_"+str(i), nn.Linear(int(math.pow(2,i)),int(math.pow(2,i+1)))) 
             
             ### choose activate function
-            self.layer_list.add_module("ReLU_"+str(i), nn.ReLU()) 
-            # self.layer_list.add_module("LeakyReLU_"+str(i), nn.LeakyReLU(-1.0)) 
+            if act_func == "ReLU":
+                self.layer_list.add_module("ReLU_"+str(i), nn.ReLU())
+            elif act_func == "LeakyReLU":
+                self.layer_list.add_module("LeakyReLU_"+str(i), nn.LeakyReLU(-1.0)) 
         
         self.visual_layer = nn.Linear(int(math.pow(2,num_layer+1)), 2) 
         self.last_layer = nn.Linear(2,1)                   
