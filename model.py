@@ -112,6 +112,9 @@ class ResNet(nn.Module):
             
             return out7, out4, out3, out2, out1
 
+def ResNet10(num_classes):
+    return ResNet(BasicBlock, [1, 1, 1, 1], num_classes=num_classes)
+
 def ResNet18(num_classes):
     return ResNet(BasicBlock, [2, 2, 2, 2], num_classes=num_classes)
 
