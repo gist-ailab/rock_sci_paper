@@ -15,7 +15,7 @@ te_rate = 1-tr_rate-va_rate
 np.random.seed(seed)
 random.seed(seed)
 
-save_path = f'C:\\Users\\USER\\Desktop\\GSH_CRP\\codes\\rock_sci_paper\\data\\ro_sci_pa_heo\\'
+save_path = f'C:\\Users\\USER\\Desktop\\GSH_CRP\\codes\\rock_sci_paper\\data\\pic128'
 
 tr_f = open(os.path.join(save_path, 'train.txt'), 'w')
 va_f = open(os.path.join(save_path, 'val.txt'), 'w')
@@ -26,7 +26,7 @@ total_names = []
 gestures = ['paper', 'rock', 'scissors']
 for gesture in gestures:
     # gesture = 'scissor'
-    d_path = f'C:\\Users\\USER\\Desktop\\GSH_CRP\\codes\\rock_sci_paper\\data\\ro_sci_pa_heo\\{gesture}\\*'
+    d_path = f'C:\\Users\\USER\\Desktop\\GSH_CRP\\codes\\rock_sci_paper\\data\\pic128\\{gesture}\\*'
 
     img_paths = glob(d_path, recursive=True)
     # print(img_paths)
