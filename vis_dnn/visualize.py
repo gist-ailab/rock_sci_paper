@@ -113,7 +113,10 @@ class LightVisualize(QWidget):
                             self.canvas.axes[j].scatter(x = feature[i][j][0][0], y = feature[i][j][0][1], color='red', s= 100)
                         elif label[i].item()==1:
                             self.canvas.axes[j].scatter(x = feature[i][j][0][0], y = feature[i][j][0][1], color='yellow', s= 100)
-                        self.canvas.axes[j].set_title(f"Layer : {j}", fontsize = 20)
+                        if j == 1:
+                            self.canvas.axes[j].set_title("Penultimate Layer", fontsize=20)
+                        else:
+                            self.canvas.axes[j].set_title(f"Layer : {j}", fontsize = 20)
                 
             
                 for i in range(len(dot_feature)):
