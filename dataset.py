@@ -21,6 +21,6 @@ class RockScissorsPaper(Dataset):
         name_path = os.path.join(self.rootpath, self.names[idx])
         img = cv2.imread(name_path)
         img = self.transform(img)
-        label = name_path.split('\\')[-2]
+        label = name_path.split('/')[-2]
         label = self.label_dict[label]
         return img, label
