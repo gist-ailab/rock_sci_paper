@@ -1,8 +1,5 @@
 import os
-import torch.nn.functional as F
-import torchvision.transforms.functional as F2
 from glob import glob
-import cv2
 import numpy as np
 import random
 
@@ -26,10 +23,9 @@ total_names = []
 
 gestures = ['paper', 'rock', 'scissors']
 for gesture in gestures:
-    # gesture = 'scissor'
-    d_path = data_path + str(gesture) + '\\*'
+    d_path = os.path.join(data_path, gesture, '*')
+    print(d_path)
     img_paths = glob(d_path, recursive=True)
-    # print(img_paths)
     for path in img_paths:
         name = path.split('\\')[-1]
         total_names.append(str(gesture) + '/' + str(name))
