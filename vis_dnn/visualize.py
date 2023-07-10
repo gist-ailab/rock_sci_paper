@@ -11,6 +11,8 @@ class MyMplCanvas(FigureCanvas):
         
         for i in range(num+2):
             axes[i].set_facecolor('black')
+            axes[i].set_aspect('equal')
+            
             
         f.set_size_inches((50,50*(num+2)))
         
@@ -42,7 +44,7 @@ class VisualizeAllLayer(QWidget):
     def update_var(self, feature, dot_feature, label, epoch, loss, threshold):
         for i in range(self.num_layer+2):
             self.canvas.axes[i].cla()
-        
+            
         for j in range(len(feature[0])):
             for i in range(len(feature)):
                 if j == len(feature[0])-1:
@@ -99,7 +101,7 @@ class LightVisualize(QWidget):
         if epoch%10 == 0:
             for i in range(self.num_layer+2):
                 self.canvas.axes[i].cla()
-        
+                
             for j in range(len(feature[0])):
                 for i in range(len(feature)):
                     if j == len(feature[0])-1:

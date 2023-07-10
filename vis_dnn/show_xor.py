@@ -12,7 +12,7 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 ### get mouse input with pygame 
 
 init_data_array = get_grid()
-
+# print(len(init_data_array))
 ### preprocess dataset and define loader
 
 train_dataset = VIS_DATASET(init_data_array)
@@ -27,7 +27,9 @@ all_loader = torch.utils.data.DataLoader(all_dot, batch_size = 1, shuffle= False
 num_layer = 1
 # act_function = "ReLU"
 act_function = "LeakyReLU"
+
 model = FCN_only2(num_layer, act_function)
+print(model)
 
 learning_rate = 1e-1
 loss_function = nn.MSELoss(reduction="sum")
@@ -45,7 +47,7 @@ aw = VisualizeAllLayer(lat, lab, num_layer)
 
 ### train and visualize
 for t in range(epoch+1):
-    loss = train(train_loader, model, loss_function, optimizer, scheduler)
+    loss = train(train_loader, model, loss_function, optimizer, scheduler, num_layer)
     threshold = get_threshold(train_loader, model)
     dot_output, dot_feature, train_out, train_feature, train_label = test(all_loader, train_loader, model)
     aw.update_var(train_feature, dot_feature, train_label, t, loss, threshold)
