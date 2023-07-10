@@ -27,13 +27,12 @@ total_names = []
 gestures = ['paper', 'rock', 'scissors']
 for gesture in gestures:
     # gesture = 'scissor'
-    d_path = data_path + f'{gesture}/*'
-
+    d_path = data_path + str(gesture) + '\\*'
     img_paths = glob(d_path, recursive=True)
     # print(img_paths)
     for path in img_paths:
-        name = path.split('/')[-1]
-        total_names.append(f'{gesture}/{name}')
+        name = path.split('\\')[-1]
+        total_names.append(str(gesture) + '/' + str(name))
         
 random.shuffle(total_names)
 
