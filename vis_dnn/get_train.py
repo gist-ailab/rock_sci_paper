@@ -1,6 +1,21 @@
 from model import mm
-import numpy 
+
 def train(train_loader, model, loss_function, optimizer, scheduler, num_layer):
+    model.train()
+    total_loss = 0
+    for i, (inputs, labels) in enumerate(train_loader):
+        output, feature_list = model(inputs)
+        loss = loss_function(output, labels)
+        optimizer.zero_grad()
+        loss.backward()
+        total_loss += loss
+        
+        optimizer.step()
+        scheduler.step()
+    
+    return total_loss 
+
+def rotate_train(train_loader, model, loss_function, optimizer, scheduler, num_layer):
     model.train()
     total_loss = 0
     for i, (inputs, labels) in enumerate(train_loader):

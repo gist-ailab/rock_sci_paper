@@ -38,9 +38,9 @@ class FCN_only2(nn.Module):
     def get_layer_list(self):
         layer_list = []
         layer_list.append(self.layer_list)
-        # layer_list.append(self.visual_layer)
         layer_list.append(self.last_layer)
         return layer_list
+    
 ### model with larger channel that can train well only visualize last and pernultimate layer
 
 class FCN_exp2(nn.Module):
@@ -86,7 +86,7 @@ def mm(model, feature_list, num_layer):
             feature_list[i+1][0][0] = 1e-4
         if feature_list[i][0][1] ==0:
             feature_list[i][0][1] = 1e-4
-        x = math.acos(feature_list[i+1][0][0]/math.sqrt((math.pow(feature_list[i+1][0][1],2)+math.pow(feature_list[i+1][0][0],2))))-math.acos(feature_list[i][0][0]/math.sqrt((math.pow(feature_list[i][0][1],2)+math.pow(feature_list[i][0][0],2))))
+        x = math.atan(feature_list[i+1][0][1]/feature_list[i+1][0][0])-math.atan(feature_list[i][0][1]/feature_list[i][0][0],2)
         model.get_layer_list()[0][i].weight = torch.nn.Parameter(torch.tensor([[math.cos(x),-math.sin(x)],[math.sin(x),math.cos(x)]]))
     
     

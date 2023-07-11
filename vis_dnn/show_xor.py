@@ -12,7 +12,6 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 ### get mouse input with pygame 
 
 init_data_array = get_grid()
-# print(len(init_data_array))
 ### preprocess dataset and define loader
 
 train_dataset = VIS_DATASET(init_data_array)
